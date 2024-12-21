@@ -2,6 +2,7 @@ package com.efai.tictactoe
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -20,12 +21,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var markNumber = 0
     private lateinit var currentTurnImage: ImageView
     private lateinit var markImage: ImageView
+    private lateinit var playAgain: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         currentTurnImage = findViewById(R.id.currentTurn)
+        playAgain = findViewById(R.id.playagain)
         markImage = findViewById(R.id.mark)
+
         setUpListeners()
         initBoard()
     }
@@ -58,6 +62,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val view = findViewById<ImageView>(id)
             views.add(view)
             view.setOnClickListener(this)
+        }
+
+        playAgain.setOnClickListener {
+            playAgain()
         }
 
     }
@@ -111,9 +119,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             markImage.bringToFront()
             views.forEach { it.isClickable = false }
         }
+        playAgain.visibility = View.VISIBLE
     }
 
-
+    private fun playAgain() {
+        initBoard()
+        markImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.empty_background))
+        currentTurnImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.xplay))
+        playAgain.visibility = View.INVISIBLE
+        countOfTurns = 0
+        currentTurn = "x"
+        views.forEach {
+            it.setBackgroundResource(R.drawable.empty_background)
+            it.isClickable = true
+        }
+    }
 
     override fun onClick(v: View) {
         val position = (v.tag as String).toInt()
